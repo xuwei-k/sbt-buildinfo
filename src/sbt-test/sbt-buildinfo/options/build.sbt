@@ -42,7 +42,22 @@ lazy val root = (project in file(".")).
              """    "scalaVersion" -> scalaVersion)""" ::
              """""" ::
              """  val toJson: String = toMap.map{ i =>""" ::
-             """    def quote(x:Any) : String = "\"" + x + "\""""" ::
+             """    def escape(c: Char): String = c match {
+             """      case '\\' => "\\\\"
+             """      case '"' => "\\\""
+             """      case '\b' => "\\b"
+             """      case '\f' => "\\f"
+             """      case '\n' => "\\n"
+             """      case '\r' => "\\r"
+             """      case '\t' => "\\t"
+             """      case c =>
+             """        if (Character.isISOControl(c)) {
+             """          "\\u%04x".format(c.toInt)
+             """        } else {
+             """          String.valueOf(c)
+             """        }
+             """    }
+             """    def quote(x:Any) : String = "\"" + x.toString.map(escape) + "\""""" ::
              """    val key : String = quote(i._1)""" ::
              """    val value : String = i._2 match {""" ::
              """       case elem : Seq[_] => elem.map(quote).mkString("[", ",", "]")""" ::
