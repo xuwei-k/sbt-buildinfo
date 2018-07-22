@@ -22,7 +22,7 @@ private[sbtbuildinfo] case class ScalaCaseObjectRenderer(options: Seq[BuildInfoO
     s"case object $obj$objTraits {"
   )
 
-  def footer = List("}")
+  def footer = List("}\n")
 
   override def renderKeys(buildInfoResults: Seq[BuildInfoResult]) =
     header ++
